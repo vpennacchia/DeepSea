@@ -1,8 +1,13 @@
 package Impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Dec {
-    public static String decoding(String mex) {
-        char[] dec = mex.toCharArray();
+    public static String decoding(Mex mex) {
+        String m = mex.getMex();
+        char[] dec = m.toCharArray();
+        ArrayList<Integer> SpecialChar = mex.getSpecialChar();
         String dec_mex = "";
         int i, j;
 
@@ -26,12 +31,23 @@ public class Dec {
             if (dec[i] == '%' || dec[i] == '$' || dec[i] == '#' || dec[i] == '@') {
                 dec[i] = ' ';
              }
+
             if (dec[i] != ' ') {
                 if(i % 2 == 0) {
-                    dec[i] = (char) (((int) dec[i] - (i * 3)) - 5 - dec.length - i);
+                    if(SpecialChar.contains(i)){
+                        dec[i] = (char) ( (int) (dec[i]) - 1);
+                    }
+                    else {
+                        dec[i] = (char) (((int) dec[i] - (i * 3)) - 5 - dec.length - i);
+                    }
                 }
-                else{
-                    dec[i] = (char) (((int) dec[i] - ( ((i * 6) + 13) + dec.length + (i+4) * (dec.length / 2))));
+                else {
+                    if(SpecialChar.contains(i)){
+                        dec[i] = (char) ( (int) (dec[i]) + 1);
+                    }
+                    else {
+                        dec[i] = (char) (((int) dec[i] - (((i * 6) + 13) + dec.length + (i + 4) * (dec.length / 2))));
+                    }
                 }
             }
         }
