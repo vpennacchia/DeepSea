@@ -35,7 +35,7 @@ public class Dec {
             if (dec[i] != ' ') {
                 if(i % 2 == 0) {
                     if(SpecialChar.contains(i)){
-                        dec[i] = (char) ( (int) (dec[i]) - 1);
+                        dec[i] = (char) ( (int) (dec[i]) - 50);
                     }
                     else {
                         dec[i] = (char) (((int) dec[i] - (i * 3)) - 5 - dec.length - i);
@@ -43,7 +43,7 @@ public class Dec {
                 }
                 else {
                     if(SpecialChar.contains(i)){
-                        dec[i] = (char) ( (int) (dec[i]) + 1);
+                        dec[i] = (char) ( (int) (dec[i]) - 40);
                     }
                     else {
                         dec[i] = (char) (((int) dec[i] - (((i * 6) + 13) + dec.length + (i + 4) * (dec.length / 2))));

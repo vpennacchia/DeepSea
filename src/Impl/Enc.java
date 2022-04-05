@@ -20,14 +20,14 @@ public class Enc {
             if (encode[i] != ' ') {
                 if (i % 2 == 0) {
                     if (utf == 0 || (utf >= 127 && utf <= 159) || utf > 1824) {
-                        encode[i] = (char) ((int) (encode[i]) + 1);
+                        encode[i] = (char) ((int) (encode[i]) + 50);
                         SpecialChar.add(i);
                     } else {
                         encode[i] = (char) (((int) encode[i] + ((i * 3) + 5) + encode.length + i));
                     }
                 } else {
                     if (utf2 == 0 || (utf2 >= 127 && utf2 <= 159) || utf2 > 1824) {
-                        encode[i] = (char) ((int) (encode[i]) - 1);
+                        encode[i] = (char) ((int) (encode[i]) + 40);
                         SpecialChar.add(i);
                     } else {
                         encode[i] = (char) (((int) encode[i] + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
