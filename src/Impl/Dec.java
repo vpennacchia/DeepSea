@@ -1,9 +1,9 @@
 package Impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import resource.Mex;
+import resource.MexInt;
 
-import static java.lang.Math.pow;
+import java.util.ArrayList;
 
 public class Dec {
     public static String decoding(Mex mex) {
@@ -66,6 +66,16 @@ public class Dec {
                 dec_mex = dec_mex + dec[j];
         }
         return dec_mex;
+    }
+
+    public static int decoding(MexInt mex){
+        String m = mex.getCriptMexStr();
+        char [] m2 = m.toCharArray();
+        int cr_mex = mex.getCriptMex();
+        m = mex.getCriptMexStr();
+        cr_mex = cr_mex -  ((((int) m2[0]) * m2.length) + m2[m2.length - 1]);
+
+        return cr_mex;
     }
   }
 

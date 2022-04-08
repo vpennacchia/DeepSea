@@ -1,12 +1,10 @@
 package Impl;
 
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.*;
-import java.util.ArrayList;
+import resource.Mex;
+import resource.MexInt;
 
-import static java.lang.Math.pow;
+import java.util.ArrayList;
 
 /*VP01*/
 public class Enc {
@@ -94,4 +92,19 @@ public class Enc {
 
         return m;
     }
+
+   public static MexInt encoding(int mex){
+       MexInt mexInt = new MexInt();
+       Mex mex2;
+       String m = String.valueOf(mex);
+       mex2 = encoding(m);
+       mexInt.setCriptMexStr(mex2.getMex());
+       m = mex2.getMex();
+       char [] m2 = m.toCharArray();
+
+       mex = mex +  (((int) m2[0]) * m2.length) + m2[m2.length - 1];
+
+       mexInt.setCriptMex(mex);
+       return mexInt;
+   }
 }
