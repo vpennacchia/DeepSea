@@ -1,52 +1,32 @@
 package Impl;
 
 
-import resource.Mex;
-import resource.MexInt;
-
 import java.util.ArrayList;
 
 /*VP01*/
 public class Enc {
-    public static Mex encoding(String mex) {
-        String enc_mex="";
-        char [] encode= mex.toCharArray();
-        int i = 0, space=0, j=0;
-        ArrayList<Integer> SpecialChar = new ArrayList<>();
+    //metodo di codifica
+    public static String encoding(String mex) {
+        String enc_mex = "";
+        char[] encode = mex.toCharArray();
+        int i = 0, space = 0, j = 0;
 
-        if(mex.length() == 1){
-            int utf =  (char) (((int) encode[0] + ((1 * 3) + 5) + encode.length + 1));
-            if (utf == 0 || (utf >= 127 && utf <= 159) || utf > 1824) {
-                encode[0] = (char) ((int) (encode[0]) + 50);
-                SpecialChar.add(0);
-            }
-            else{
-                encode[0] = (char) (((int) encode[0] + ((1 * 3) + 5) + encode.length + 1));
-            }
-        }
-        else {
+        //caso in cui la stringa ha lunghezza 1
+        if (mex.length() == 1) {
+            encode[0] = (char) (((int) encode[0] + ((1 * 3) + 5) + encode.length + 1));
+        } else {
 
             for (i = 0; i <= encode.length - 1; ++i) {
-                int utf = (char) (((int) encode[i] + ((i * 3) + 5) + encode.length + i));
-                int utf2 = (char) (((int) encode[i] + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
+                //criptazione dei vari caratteri
                 if (encode[i] != ' ') {
                     if (i % 2 == 0) {
-                        if (utf == 0 || (utf >= 127 && utf <= 159) || utf > 1824) {
-                            encode[i] = (char) ((int) (encode[i]) + 50);
-                            SpecialChar.add(i);
-                        } else {
-                            encode[i] = (char) (((int) encode[i] + ((i * 3) + 5) + encode.length + i));
-                        }
+                        encode[i] = (char) (((int) encode[i] + ((i * 3) + 5) + encode.length + i));
                     } else {
-                        if (utf2 == 0 || (utf2 >= 127 && utf2 <= 159) || utf2 > 1824) {
-                            encode[i] = (char) ((int) (encode[i]) + 40);
-                            SpecialChar.add(i);
-                        } else {
-                            encode[i] = (char) (((int) encode[i] + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
-                        }
+                        encode[i] = (char) (((int) encode[i] + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
                     }
                 }
 
+                //criptazione spazi
                 if (encode[i] == ' ') {
                     if (space > 3) {
                         space = 0;
@@ -66,45 +46,29 @@ public class Enc {
                     ++space;
                 }
             }
-
-            j = (encode.length) / 2;
-            for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
-                char s = encode[i];
-                encode[i] = encode[j];
-                encode[j] = s;
-            }
-            if (encode.length % 2 == 0) {
-                j = (encode.length) / 2;
-                char el0 = encode[0];
-                encode[0] = encode[j - 1];
-                encode[j - 1] = el0;
-                char el1 = encode[j];
-                encode[j] = encode[encode.length - 1];
-                encode[encode.length - 1] = el1;
-            }
         }
-       for (j = 0; j <= encode.length - 1; ++j) {
-           enc_mex = enc_mex + encode[j];
-       }
-        Mex m = new Mex();
-        m.setMex(enc_mex);
-        m.setSpecialChar(SpecialChar);
+        //manipoliamo la stringa, invertiamo  e scambiamo alcuni caratteri
+        j = (encode.length) / 2;
+        for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
+            char s = encode[i];
+            encode[i] = encode[j];
+            encode[j] = s;
+        }
+        if (encode.length % 2 == 0) {
+            j = (encode.length) / 2;
+            char el0 = encode[0];
+            encode[0] = encode[j - 1];
+            encode[j - 1] = el0;
+            char el1 = encode[j];
+            encode[j] = encode[encode.length - 1];
+            encode[encode.length - 1] = el1;
+        }
 
-        return m;
-    }
+       for(j =0;j <=encode.length -1; ++j) {
+        enc_mex = enc_mex + encode[j];
+         }
 
-   public static MexInt encoding(int mex){
-       MexInt mexInt = new MexInt();
-       Mex mex2;
-       String m = String.valueOf(mex);
-       mex2 = encoding(m);
-       mexInt.setCriptMexStr(mex2.getMex());
-       m = mex2.getMex();
-       char [] m2 = m.toCharArray();
+        return enc_mex;
+}
 
-       mex = mex +  (((int) m2[0]) * m2.length) + m2[m2.length - 1];
-
-       mexInt.setCriptMex(mex);
-       return mexInt;
-   }
 }
