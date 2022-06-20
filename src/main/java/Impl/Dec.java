@@ -4,13 +4,30 @@ import resource.Mex;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import static java.lang.Math.pow;
+
 public class Dec {
-    public static String decoding(Mex mex) {
+    public static String decoding(Mex mex, String encodedKey) {
         String m = mex.getMex();
         char[] dec = m.toCharArray();
         ArrayList<Integer> SpecialChar = mex.getSpecialChar();
         String dec_mex = "";
         int i, j;
+
+        char [] ek = encodedKey.toCharArray();
+        for(i = 0; i<= dec.length - 1; ++i){
+            if(i <= ek.length - 1) {
+                if(i != 0) {
+                    dec[i] =  (char) ((dec[i] - (pow(ek[i], 2))));
+                }
+                else{
+                    dec[i] = (char) ((dec[i] - ek[0]));
+                }
+            }
+            else{
+                dec[i] = (char) ((dec[i] - ek[0]));
+            }
+        }
 
         if(m.length() == 1){
             if(SpecialChar.contains(0)){

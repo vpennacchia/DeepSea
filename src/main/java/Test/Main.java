@@ -4,27 +4,33 @@ import main.java.Impl.Dec;
 import main.java.Impl.Enc;
 import resource.Mex;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+
 
 public class Main {
     static ArrayList<Integer> el = new ArrayList<>();
 
-    public static ArrayList<Integer>  printEl(int a) {
+    public static ArrayList<Integer> printEl(int a) {
         Scanner scanner = new Scanner(System.in);
         int i;
-        if(a != -1) {
+        if (a != -1) {
             el.add(a);
         }
         System.out.println("chiave: ");
         int m = scanner.nextInt();
-        if(m != -1){
+        if (m != -1) {
             printEl(m);
         }
         return el;
     }
 
-    public static void main(String [] args) {
+    public static void main(String[] args) throws NoSuchAlgorithmException {
+
+
+
         Enc enc = new Enc();
         Dec dec = new Dec();
         Scanner scanner = new Scanner(System.in);
@@ -36,7 +42,8 @@ public class Main {
             String a = scanner.nextLine();
             mess = enc.encoding(a);
             System.out.println("Messaggio criptato: " + mess.getMex());
-            System.out.println("chiavi segrete da dare insieme al messaggio: " + mess.getSpecialChar().toString());
+            System.out.println("Indici segreti da dare insieme al messaggio: " + mess.getSpecialChar().toString());
+            System.out.println("chiave di cifratura: " + mess.getKey());
         }
         else if(encodec.equals("decriptare")) {
             System.out.println("Inserisci messaggio da decriptare");
@@ -49,11 +56,17 @@ public class Main {
             mes.setMex(m);
             mes.setSpecialChar(el);
 
-            String decr = dec.decoding(mes);
-            System.out.println(decr);
+            Scanner scanner2 = new Scanner(System.in);
+            System.out.println("Inserisci chiave di cifratura");
+            String key = scanner2.nextLine();
+            String decr = dec.decoding(mes , key);
+            System.out.println("Messaggio decriptato: " + decr);
         }
 
         }
+
+
     }
+
 
 
