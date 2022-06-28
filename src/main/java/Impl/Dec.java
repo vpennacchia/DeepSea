@@ -1,24 +1,43 @@
 package main.java.Impl;
 
-import resource.Mex;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import static java.lang.Math.pow;
-
 public class Dec {
-    public static String decoding(Mex mex, String encodedKey) {
-        String m = mex.getMex();
-        char[] dec = m.toCharArray();
-        ArrayList<Integer> SpecialChar = mex.getSpecialChar();
+    public static String decoding(String mex, String encodedKey) {
+        char[] dec = mex.toCharArray();
+        ArrayList<Integer> SpecialChar = new ArrayList<>();
         String dec_mex = "";
         int i, j;
+        mex = "";
+        for(i = 0; i<= dec.length - 1; ++i){
+            if(dec[i] == '_' && dec[i + 1] == dec[0] && dec[i + 2] == '_'){
+                for(j = i + 3; j <= dec.length - 1; ++j){
+                    int dash = j;
+                    if(dec[dash] == '-' && dash != dec.length - 1) {
+                        ++dash;
+                        String num = "";
+                        while (dec[dash] != '-') {
+                            num = num + dec[dash];
+                            ++dash;
+                        }
+                        SpecialChar.add(Integer.valueOf(num));
+                    }
+                }
+                break;
+            }
+            else{
+                mex = mex + dec[i];
+            }
+        }
+        System.out.println(SpecialChar.size());
+        dec = mex.toCharArray();
 
         char [] ek = encodedKey.toCharArray();
         for(i = 0; i<= dec.length - 1; ++i){
             if(i <= ek.length - 1) {
                 if(i != 0) {
-                    dec[i] =  (char) ((dec[i] - (pow(ek[i], 2))));
+                    dec[i] =  (char) ((dec[i] - (ek[i] * ek[i])));
                 }
                 else{
                     dec[i] = (char) ((dec[i] - ek[0]));
@@ -29,7 +48,8 @@ public class Dec {
             }
         }
 
-        if(m.length() == 1){
+
+        if(mex.length() == 1){
             if(SpecialChar.contains(0)){
                 dec[0] = (char) ((int) (dec[0]) - 1);
             }

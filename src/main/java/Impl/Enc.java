@@ -1,8 +1,6 @@
 package main.java.Impl;
 
 
-import resource.Mex;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -10,15 +8,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 
-import static java.lang.Math.pow;
-
 /*VP01*/
 public class Enc {
     //metodo di codifica
-    public static Mex encoding(String mex) throws NoSuchAlgorithmException {
+    public String encoding(String mex) throws NoSuchAlgorithmException {
         String enc_mex="";
         char [] encode= mex.toCharArray();
-        int i = 0, space = 0, j = 0;
+        int i, space = 0, j;
         ArrayList<Integer> SpecialChar = new ArrayList<>();
 
         if(mex.length() == 1){
@@ -97,13 +93,15 @@ public class Enc {
 
         SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
         String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        System.out.println("chiave di cifratura: " + encodedKey);
         String key_mex = "";
+
 
         char [] ek = encodedKey.toCharArray();
         for(i = 0; i<= encode.length - 1; ++i){
             if(i <= ek.length - 1) {
                 if(i != 0) {
-                    encode[i] = (char) ((encode[i] + (pow(ek[i], 2))));
+                    encode[i] = (char) ((encode[i] + (ek[i] * ek[i])));
                 }
                 else{
                     encode[i] = (char) ((encode[i] + ek[0]));
@@ -120,13 +118,17 @@ public class Enc {
 
         enc_mex = key_mex;
 
-        Mex m = new Mex();
-        enc_mex = convertToUTF8(enc_mex);
-        m.setMex(enc_mex);
-        m.setSpecialChar(SpecialChar);
-        m.setKey(encodedKey);
 
-        return m;
+
+        enc_mex =  enc_mex + "_" + encode[0]  + "_" + "-";
+        for(i=0; i <= SpecialChar.size() - 1; ++i){
+            enc_mex = enc_mex + SpecialChar.get(i) + "-";
+        }
+
+        enc_mex = convertToUTF8(enc_mex);
+
+
+        return enc_mex;
     }
 
     public static String convertToUTF8(String s) {
