@@ -3,6 +3,10 @@ package main.java.Impl;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -11,7 +15,7 @@ import java.util.Base64;
 /*VP01*/
 public class Enc {
     //metodo di codifica
-    public String encoding(String mex) throws NoSuchAlgorithmException {
+    public String encode(String mex) throws NoSuchAlgorithmException {
         String enc_mex="";
         char [] encode= mex.toCharArray();
         int i, space = 0, j;
@@ -125,20 +129,27 @@ public class Enc {
             enc_mex = enc_mex + SpecialChar.get(i) + "-";
         }
 
-        enc_mex = convertToUTF8(enc_mex);
 
-
+        createFile(enc_mex);
         return enc_mex;
     }
 
-    public static String convertToUTF8(String s) {
-        String out = null;
+
+    public  void createFile(String mex){
+        String path = System.getProperty("user.dir");
         try {
-            out = new String(s.getBytes("UTF-8"), StandardCharsets.UTF_8.displayName());
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;
+            File file = new File(path + "/Mex.txt");
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(mex);
+            bw.flush();
+            bw.close();
         }
-        return out;
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
     }
+
 
 }

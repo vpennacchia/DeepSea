@@ -1,10 +1,12 @@
 package main.java.Impl;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Dec {
-    public static String decoding(String mex, String encodedKey) {
+    public static String decode(String encodedKey) throws IOException {
+        String mex = readFile();
         char[] dec = mex.toCharArray();
         ArrayList<Integer> SpecialChar = new ArrayList<>();
         String dec_mex = "";
@@ -30,7 +32,6 @@ public class Dec {
                 mex = mex + dec[i];
             }
         }
-        System.out.println(SpecialChar.size());
         dec = mex.toCharArray();
 
         char [] ek = encodedKey.toCharArray();
@@ -101,18 +102,34 @@ public class Dec {
         for (j = 0; j <= dec.length - 1; ++j) {
             dec_mex = dec_mex + dec[j];
         }
-        String dec_mexs = convertToUTF8(dec_mex);
-        return dec_mexs;
+        writeFile(dec_mex);
+        return dec_mex;
     }
 
-    public static String convertToUTF8(String s) {
-        String out = null;
+
+    public static String readFile() throws IOException {
+        String path = System.getProperty("user.dir");
+        BufferedReader reader = new BufferedReader(new FileReader(path + "/Mex.txt"));
+        String line = reader.readLine();
+
+        return line;
+    }
+
+
+    public static void writeFile(String mex){
+        String path = System.getProperty("user.dir");
         try {
-            out = new String(s.getBytes("UTF-8"), StandardCharsets.UTF_8.displayName());
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;
+            File file = new File(path + "/Mex.txt");
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(mex);
+            bw.flush();
+            bw.close();
         }
-        return out;
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
