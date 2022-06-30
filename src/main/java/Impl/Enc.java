@@ -3,10 +3,6 @@ package main.java.Impl;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -17,6 +13,7 @@ public class Enc {
     ArrayList<Integer> SpecialChar = new ArrayList<>();
     char [] encode;
     String enc_mex = "";
+    String encodedKey = "";
     String key_mex = "";
     String Key = "";
 
@@ -28,9 +25,11 @@ public class Enc {
         for (i = 0; i <= encode.length - 1; ++i) {
             if (encode[i] != ' ') {
                 encode[i] = encodeCharacter(encode[i]);
+                System.out.println("--> " + printArray(encode));
             }
             if (encode[i] == ' ') {
                encode[i] = encodeSpaces();
+                System.out.println("--> " + printArray(encode));
             }
         }
 
@@ -43,25 +42,10 @@ public class Enc {
 
         enc_mex = key_mex;
         addIndexes();
-
-        createFile(enc_mex);
+        System.out.println("--> " + enc_mex);
+        System.out.println("\n");
+        System.out.println("chiave di cifratura: " + encodedKey);
         return enc_mex;
-    }
-
-
-    public  void createFile(String mex){
-        String path = System.getProperty("user.dir");
-        try {
-            File file = new File(path + "/Mex.txt");
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(mex);
-            bw.flush();
-            bw.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public char encodeCharacter(char character) {
@@ -113,6 +97,7 @@ public class Enc {
             char s = encode[i];
             encode[i] = encode[j];
             encode[j] = s;
+            System.out.println("--> " + printArray(encode));
         }
         if (encode.length % 2 == 0) {
             j = (encode.length) / 2;
@@ -122,6 +107,8 @@ public class Enc {
             char el1 = encode[j];
             encode[j] = encode[encode.length - 1];
             encode[encode.length - 1] = el1;
+            System.out.println("--> " + printArray(encode));
+
         }
     }
 
@@ -135,8 +122,7 @@ public class Enc {
 
     public String generateKey() throws NoSuchAlgorithmException {
             SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
-            String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-            System.out.println("chiave di cifratura: " + encodedKey);
+            encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
             return encodedKey;
     }
 
@@ -146,13 +132,16 @@ public class Enc {
             if(i <= ek.length - 1) {
                 if(i != 0) {
                     encode[i] = (char) ((encode[i] + (ek[i] * ek[i])));
+                    System.out.println("--> " + printArray(encode));
                 }
                 else{
                     encode[i] = (char) ((encode[i] + ek[0]));
+                    System.out.println("--> " + printArray(encode));
                 }
             }
             else{
                 encode[i] = (char) ((encode[i] + ek[0]));
+                System.out.println("--> " + printArray(encode));
             }
         }
     }
@@ -164,5 +153,13 @@ public class Enc {
         }
     }
 
+    public String printArray(char [] a){
+        String arr = "";
+        for (j = 0; j <= encode.length - 1; ++j) {
+            arr = arr + a[j];
+        }
 
+        return arr;
+
+    }
 }

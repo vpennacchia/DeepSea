@@ -13,9 +13,10 @@ public class Dec {
     static int dash;
     char [] ek;
 
-    public String decode(String encodedKey) throws IOException {
-        mex = readFile();
+    public String decode(String encodedKey, String encMex) throws IOException {
+        mex = encMex;
         dec = mex.toCharArray();
+        System.out.println("--> " + printArray(dec));
         mex = "";
 
         //aggiunge al nostro arraylist tutti gli indici presenti nel messaggio criptato
@@ -30,32 +31,9 @@ public class Dec {
         //trasforma l'array in stringa
         dec_mex = buildMex(dec_mex);
 
-        //scrive il messaggio su un file
-        writeFile(dec_mex);
         return dec_mex;
     }
 
-    public static String readFile() throws IOException {
-        String path = System.getProperty("user.dir");
-        BufferedReader reader = new BufferedReader(new FileReader(path + "/Mex.txt"));
-        String line = reader.readLine();
-
-        return line;
-    }
-
-    public static void writeFile(String mex) {
-        String path = System.getProperty("user.dir");
-        try {
-            File file = new File(path + "/Mex.txt");
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(mex);
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     public void addSpecialChars() {
         for (i = 0; i <= dec.length - 1; ++i) {
             if (dec[i] == '_' && dec[i + 1] == dec[0] && dec[i + 2] == '_') {
@@ -77,6 +55,7 @@ public class Dec {
             }
         }
         dec = mex.toCharArray();
+        System.out.println("--> " + printArray(dec));
     }
 
    public void decKeyMex(String encodedKey){
@@ -85,13 +64,16 @@ public class Dec {
            if(i <= ek.length - 1) {
                if(i != 0) {
                    dec[i] =  (char) ((dec[i] - (ek[i] * ek[i])));
+                   System.out.println("--> " + printArray(dec));
                }
                else{
                    dec[i] = (char) ((dec[i] - ek[0]));
+                   System.out.println("--> " + printArray(dec));
                }
            }
            else{
                dec[i] = (char) ((dec[i] - ek[0]));
+               System.out.println("--> " + printArray(dec));
            }
        }
    }
@@ -102,6 +84,7 @@ public class Dec {
            char s = dec[j];
            dec[j] = dec[i];
            dec[i] = s;
+           System.out.println("--> " + printArray(dec));
        }
        if (dec.length % 2 == 0) {
            j = (dec.length) / 2;
@@ -111,6 +94,7 @@ public class Dec {
            char el1 = dec[j];
            dec[j] = dec[dec.length - 1];
            dec[dec.length - 1] = el1;
+           System.out.println("--> " + printArray(dec));
        }
    }
 
@@ -118,24 +102,39 @@ public class Dec {
         for (i = 0; i <= dec.length - 1; ++i) {
             if (dec[i] == '%' || dec[i] == '$' || dec[i] == '#' || dec[i] == '@') {
                 dec[i] = ' ';
+                System.out.println("--> " + printArray(dec));
             }
 
             if (dec[i] != ' ') {
                 if (i % 2 == 0) {
                     if (SpecialChar.contains(i)) {
                         dec[i] = (char) ((int) (dec[i]) - 1);
+                        System.out.println("--> " + printArray(dec));
                     } else {
                         dec[i] = (char) (((int) dec[i] - (i * 3)) - 5 - dec.length - i);
+                        System.out.println("--> " + printArray(dec));
                     }
                 } else {
                     if (SpecialChar.contains(i)) {
                         dec[i] = (char) ((int) (dec[i]) - 1);
+                        System.out.println("--> " + printArray(dec));
                     } else {
                         dec[i] = (char) (((int) dec[i] - (((i * 6) + 13) + dec.length + (i + 4) * (dec.length / 2))));
+                        System.out.println("--> " + printArray(dec));
                     }
                 }
             }
         }
+    }
+
+    public String printArray(char [] a){
+        String arr = "";
+        for (j = 0; j <= dec.length - 1; ++j) {
+            arr = arr + a[j];
+        }
+
+        return arr;
+
     }
 
   public String buildMex(String dec_mex){
