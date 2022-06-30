@@ -3,6 +3,11 @@ package main.java.Impl;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -28,7 +33,7 @@ public class Enc {
                 System.out.println("--> " + printArray(encode));
             }
             if (encode[i] == ' ') {
-               encode[i] = encodeSpaces();
+                encode[i] = encodeSpaces();
                 System.out.println("--> " + printArray(encode));
             }
         }
@@ -46,6 +51,23 @@ public class Enc {
         System.out.println("\n");
         System.out.println("chiave di cifratura: " + encodedKey);
         return enc_mex;
+    }
+
+
+    public  void createFile(String mex){
+        String path = System.getProperty("user.dir");
+        try {
+            File file = new File(path + "/Mex.txt");
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(mex);
+            bw.flush();
+            bw.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public char encodeCharacter(char character) {
@@ -91,39 +113,13 @@ public class Enc {
         return encode[i];
     }
 
-    public void mixCharacters(){
-        j = (encode.length) / 2;
-        for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
-            char s = encode[i];
-            encode[i] = encode[j];
-            encode[j] = s;
-            System.out.println("--> " + printArray(encode));
-        }
-        if (encode.length % 2 == 0) {
-            j = (encode.length) / 2;
-            char el0 = encode[0];
-            encode[0] = encode[j - 1];
-            encode[j - 1] = el0;
-            char el1 = encode[j];
-            encode[j] = encode[encode.length - 1];
-            encode[encode.length - 1] = el1;
-            System.out.println("--> " + printArray(encode));
-
-        }
-    }
-
-    public String buildMex(String enc_mex) {
+    public String printArray(char [] a){
+        String arr = "";
         for (j = 0; j <= encode.length - 1; ++j) {
-            enc_mex = enc_mex + encode[j];
+            arr = arr + a[j];
         }
 
-        return enc_mex;
-    }
-
-    public String generateKey() throws NoSuchAlgorithmException {
-            SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
-            encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-            return encodedKey;
+        return arr;
     }
 
     public void encKeyMex(){
@@ -146,6 +142,32 @@ public class Enc {
         }
     }
 
+    public void mixCharacters(){
+        j = (encode.length) / 2;
+        for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
+            char s = encode[i];
+            encode[i] = encode[j];
+            encode[j] = s;
+        }
+        if (encode.length % 2 == 0) {
+            j = (encode.length) / 2;
+            char el0 = encode[0];
+            encode[0] = encode[j - 1];
+            encode[j - 1] = el0;
+            char el1 = encode[j];
+            encode[j] = encode[encode.length - 1];
+            encode[encode.length - 1] = el1;
+        }
+    }
+
+    public String buildMex(String enc_mex) {
+        for (j = 0; j <= encode.length - 1; ++j) {
+            enc_mex = enc_mex + encode[j];
+        }
+
+        return enc_mex;
+    }
+
     public void addIndexes(){
         enc_mex =  enc_mex + "_" + encode[0]  + "_" + "-";
         for(i=0; i <= SpecialChar.size() - 1; ++i){
@@ -153,13 +175,9 @@ public class Enc {
         }
     }
 
-    public String printArray(char [] a){
-        String arr = "";
-        for (j = 0; j <= encode.length - 1; ++j) {
-            arr = arr + a[j];
-        }
-
-        return arr;
-
+    public String generateKey() throws NoSuchAlgorithmException {
+        SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
+        encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        return encodedKey;
     }
 }

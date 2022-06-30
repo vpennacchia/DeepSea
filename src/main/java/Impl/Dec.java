@@ -1,20 +1,20 @@
 package main.java.Impl;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Dec {
     String mex;
-    static char[] dec;
-    static ArrayList<Integer> SpecialChar = new ArrayList<>();
+    char[] dec;
+    ArrayList<Integer> SpecialChar = new ArrayList<>();
     String dec_mex = "";
-    static int i;
-    static int j;
-    static int dash;
+    int dash;
+    int i, j;
     char [] ek;
 
-    public String decode(String encodedKey, String encMex) throws IOException {
-        mex = encMex;
+    public String decode(String encodedKey, String encodedMex) throws IOException {
+        mex = encodedMex;
         dec = mex.toCharArray();
         System.out.println("--> " + printArray(dec));
         mex = "";
@@ -34,69 +34,47 @@ public class Dec {
         return dec_mex;
     }
 
-    public void addSpecialChars() {
-        for (i = 0; i <= dec.length - 1; ++i) {
-            if (dec[i] == '_' && dec[i + 1] == dec[0] && dec[i + 2] == '_') {
-                for (j = i + 3; j <= dec.length - 1; ++j) {
-                    dash = j;
-                    if (dec[dash] == '-' && dash != dec.length - 1) {
-                        ++dash;
-                        String num = "";
-                        while (dec[dash] != '-') {
-                            num = num + dec[dash];
-                            ++dash;
-                        }
-                        SpecialChar.add(Integer.valueOf(num));
-                    }
-                }
-                break;
-            } else {
-                mex = mex + dec[i];
-            }
-        }
-        dec = mex.toCharArray();
-        System.out.println("--> " + printArray(dec));
+    public static String readFile() throws IOException {
+        String path = System.getProperty("user.dir");
+        BufferedReader reader = new BufferedReader(new FileReader(path + "/Mex.txt"));
+        String line = reader.readLine();
+
+        return line;
     }
 
-   public void decKeyMex(String encodedKey){
-       ek = encodedKey.toCharArray();
-       for(i = 0; i<= dec.length - 1; ++i){
-           if(i <= ek.length - 1) {
-               if(i != 0) {
-                   dec[i] =  (char) ((dec[i] - (ek[i] * ek[i])));
-                   System.out.println("--> " + printArray(dec));
-               }
-               else{
-                   dec[i] = (char) ((dec[i] - ek[0]));
-                   System.out.println("--> " + printArray(dec));
-               }
-           }
-           else{
-               dec[i] = (char) ((dec[i] - ek[0]));
-               System.out.println("--> " + printArray(dec));
-           }
-       }
-   }
 
-  public void rollbackCharsPositions(){
-       j = (dec.length) / 2;
-       for (i = 0; i <= ((dec.length) / 2) - 1 && j <= dec.length; ++i, ++j) {
-           char s = dec[j];
-           dec[j] = dec[i];
-           dec[i] = s;
-           System.out.println("--> " + printArray(dec));
-       }
-       if (dec.length % 2 == 0) {
-           j = (dec.length) / 2;
-           char el0 = dec[0];
-           dec[0] = dec[j - 1];
-           dec[j - 1] = el0;
-           char el1 = dec[j];
-           dec[j] = dec[dec.length - 1];
-           dec[dec.length - 1] = el1;
-           System.out.println("--> " + printArray(dec));
-       }
-   }
+    public static void writeFile(String mex){
+        String path = System.getProperty("user.dir");
+        try {
+            File file = new File(path + "/Mex.txt");
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(mex);
+            bw.flush();
+            bw.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void rollbackCharsPositions(){
+        j = (dec.length) / 2;
+        for (i = 0; i <= ((dec.length) / 2) - 1 && j <= dec.length; ++i, ++j) {
+            char s = dec[j];
+            dec[j] = dec[i];
+            dec[i] = s;
+        }
+        if (dec.length % 2 == 0) {
+            j = (dec.length) / 2;
+            char el0 = dec[0];
+            dec[0] = dec[j - 1];
+            dec[j - 1] = el0;
+            char el1 = dec[j];
+            dec[j] = dec[dec.length - 1];
+            dec[dec.length - 1] = el1;
+        }
+    }
 
     public void decodeMex(){
         for (i = 0; i <= dec.length - 1; ++i) {
@@ -127,6 +105,50 @@ public class Dec {
         }
     }
 
+    public void decKeyMex(String encodedKey){
+        ek = encodedKey.toCharArray();
+        for(i = 0; i<= dec.length - 1; ++i){
+            if(i <= ek.length - 1) {
+                if(i != 0) {
+                    dec[i] =  (char) ((dec[i] - (ek[i] * ek[i])));
+                    System.out.println("--> " + printArray(dec));
+                }
+                else{
+                    dec[i] = (char) ((dec[i] - ek[0]));
+                    System.out.println("--> " + printArray(dec));
+                }
+            }
+            else{
+                dec[i] = (char) ((dec[i] - ek[0]));
+                System.out.println("--> " + printArray(dec));
+            }
+        }
+    }
+
+    public void addSpecialChars() {
+        for (i = 0; i <= dec.length - 1; ++i) {
+            if (dec[i] == '_' && dec[i + 1] == dec[0] && dec[i + 2] == '_') {
+                for (j = i + 3; j <= dec.length - 1; ++j) {
+                    dash = j;
+                    if (dec[dash] == '-' && dash != dec.length - 1) {
+                        ++dash;
+                        String num = "";
+                        while (dec[dash] != '-') {
+                            num = num + dec[dash];
+                            ++dash;
+                        }
+                        SpecialChar.add(Integer.valueOf(num));
+                    }
+                }
+                break;
+            } else {
+                mex = mex + dec[i];
+            }
+        }
+        dec = mex.toCharArray();
+        System.out.println("--> " + printArray(dec));
+    }
+
     public String printArray(char [] a){
         String arr = "";
         for (j = 0; j <= dec.length - 1; ++j) {
@@ -137,10 +159,11 @@ public class Dec {
 
     }
 
-  public String buildMex(String dec_mex){
-      for (j = 0; j <= dec.length - 1; ++j) {
-          dec_mex = dec_mex + dec[j];
-      }
-       return dec_mex;
-  }
+    public String buildMex(String dec_mex){
+        for (j = 0; j <= dec.length - 1; ++j) {
+            dec_mex = dec_mex + dec[j];
+        }
+        return dec_mex;
+    }
+
 }
