@@ -20,7 +20,7 @@ public class Main {
             System.out.println("Inserisci messaggio da criptare");
             String a = scanner.nextLine();
             enc.encode(a);
-            System.out.println("Nella stessa directory è stato creato il file Mex.txt con all'interno il messaggio criptato, per decriptare il messaggio ricordare al mittente che questo file deve trovarsi nello stesso path dell'eseguibile");
+            System.out.println("Nella directory corrente è stato creato il file Mex.txt con all'interno il messaggio criptato, per decriptare il messaggio ricordare al mittente che questo file deve trovarsi nello stesso path dell'eseguibile");
         } else if (encodec.equals("decriptare")) {
             Scanner scanner2 = new Scanner(System.in);
             System.out.println("Il file con il messaggio criptato si trova nello stesso percorso file del programma che stai eseguendo? ( digita y o n)");
@@ -31,7 +31,7 @@ public class Main {
                 dec.decode(key);
                 System.out.println("Il messaggio decriptato è stato scritto nel file Mex.txt");
             } else {
-                System.out.println("Allora sposta il file ed esegui il programma");
+                System.out.println("Allora sposta il file nella directory ed esegui il programma");
             }
 
         }
