@@ -7,12 +7,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 
-/*VP01*/
 public class Enc {
     int i, space = 0, j;
     ArrayList<Integer> SpecialChar = new ArrayList<>();
@@ -53,22 +51,6 @@ public class Enc {
         return enc_mex;
     }
 
-
-    public  void createFile(String mex){
-        String path = System.getProperty("user.dir");
-        try {
-            File file = new File(path + "/Mex.txt");
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(mex);
-            bw.flush();
-            bw.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public char encodeCharacter(char character) {
         int utf = (char) (((int) character + ((i * 3) + 5) + encode.length + i));

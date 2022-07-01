@@ -1,7 +1,6 @@
 package main.java.Impl;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Dec {
@@ -34,30 +33,6 @@ public class Dec {
         return dec_mex;
     }
 
-    public static String readFile() throws IOException {
-        String path = System.getProperty("user.dir");
-        BufferedReader reader = new BufferedReader(new FileReader(path + "/Mex.txt"));
-        String line = reader.readLine();
-
-        return line;
-    }
-
-
-    public static void writeFile(String mex){
-        String path = System.getProperty("user.dir");
-        try {
-            File file = new File(path + "/Mex.txt");
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(mex);
-            bw.flush();
-            bw.close();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     public void rollbackCharsPositions(){
         j = (dec.length) / 2;
         for (i = 0; i <= ((dec.length) / 2) - 1 && j <= dec.length; ++i, ++j) {
