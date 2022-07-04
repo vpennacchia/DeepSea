@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 
+import static java.lang.Math.pow;
+
 public class Enc {
     int i, space = 0, j;
     ArrayList<Integer> SpecialChar = new ArrayList<>();
@@ -159,12 +161,12 @@ public class Enc {
     public  ArrayList<Integer> encIndexes(){
         for(i = 0; i<= SpecialChar.size() - 1; ++i){
             if(i != 0){
-                int indx = SpecialChar.get(i) + (i * encode.length);
+                int indx = (int) (SpecialChar.get(i) + ((i * encode.length) + pow(i,2)));
                 SpecialChar.set(i, indx);
             }
             else {
-                int indx = SpecialChar.get(i) + (1 * encode.length);
-                SpecialChar.set(i, indx);
+                int indx = (int) (SpecialChar.get(i) + ((1 * encode.length) + pow(i,2)));
+                SpecialChar.set(i, indx);;
             }
         }
         return SpecialChar;

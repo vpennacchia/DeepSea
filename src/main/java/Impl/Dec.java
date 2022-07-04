@@ -3,6 +3,8 @@ package main.java.Impl;
 import java.io.*;
 import java.util.ArrayList;
 
+import static java.lang.Math.pow;
+
 public class Dec {
     String mex;
     char[] dec;
@@ -137,11 +139,11 @@ public class Dec {
         for(i = 0; i <= SpecialChar.size() - 1; ++i){
             for(i = 0; i<= SpecialChar.size() - 1; ++i){
                 if(i != 0){
-                    int indx = SpecialChar.get(i) - (i * dec.length);
+                    int indx = (int) (SpecialChar.get(i) - ((i * dec.length) + pow(i,2)));
                     SpecialChar.set(i, indx);
                 }
                 else {
-                    int indx = SpecialChar.get(i) - (1 * dec.length);
+                    int indx = (int) (SpecialChar.get(i) - ((1 * dec.length) + pow(i,2)));
                     SpecialChar.set(i, indx);
                 }
             }
