@@ -3,10 +3,6 @@ package main.java.Impl;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -44,10 +40,9 @@ public class Enc {
         key_mex = buildMex(key_mex);
 
         enc_mex = key_mex;
+        SpecialChar = encIndexes();
         addIndexes();
         System.out.println("--> " + enc_mex);
-        System.out.println("\n");
-        System.out.println("chiave di cifratura: " + encodedKey);
         return enc_mex;
     }
 
@@ -72,6 +67,10 @@ public class Enc {
             }
         }
         return character;
+    }
+
+    public String getKey(){
+        return encodedKey;
     }
 
     public char encodeSpaces(){
@@ -155,6 +154,20 @@ public class Enc {
         for(i=0; i <= SpecialChar.size() - 1; ++i){
             enc_mex = enc_mex + SpecialChar.get(i) + "-";
         }
+    }
+
+    public  ArrayList<Integer> encIndexes(){
+        for(i = 0; i<= SpecialChar.size() - 1; ++i){
+            if(i != 0){
+                int indx = SpecialChar.get(i) + (i * encode.length);
+                SpecialChar.set(i, indx);
+            }
+            else {
+                int indx = SpecialChar.get(i) + (1 * encode.length);
+                SpecialChar.set(i, indx);
+            }
+        }
+        return SpecialChar;
     }
 
     public String generateKey() throws NoSuchAlgorithmException {

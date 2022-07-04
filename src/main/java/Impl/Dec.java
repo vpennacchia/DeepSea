@@ -20,6 +20,7 @@ public class Dec {
 
         //aggiunge al nostro arraylist tutti gli indici presenti nel messaggio criptato
         addSpecialChars();
+        decIndexes();
         //prosegue con la decriptazione utilizzando la chiave di cifratura
         decKeyMex(encodedKey);
         //mette i caratteri nella posizione originaria
@@ -129,9 +130,22 @@ public class Dec {
         for (j = 0; j <= dec.length - 1; ++j) {
             arr = arr + a[j];
         }
-
         return arr;
+    }
 
+    public void decIndexes(){
+        for(i = 0; i <= SpecialChar.size() - 1; ++i){
+            for(i = 0; i<= SpecialChar.size() - 1; ++i){
+                if(i != 0){
+                    int indx = SpecialChar.get(i) - (i * dec.length);
+                    SpecialChar.set(i, indx);
+                }
+                else {
+                    int indx = SpecialChar.get(i) - (1 * dec.length);
+                    SpecialChar.set(i, indx);
+                }
+            }
+        }
     }
 
     public String buildMex(String dec_mex){
@@ -140,5 +154,4 @@ public class Dec {
         }
         return dec_mex;
     }
-
 }

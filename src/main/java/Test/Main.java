@@ -20,14 +20,17 @@ public class Main {
         if (encodec.equals("c")) {
             System.out.println("Inserisci messaggio da criptare");
             String a = scanner.nextLine();
-            System.out.println("messaggio criptato: " + enc.encode(a));
+            String encoded_mex = enc.encode(a);
+            System.out.println("\n");
+            System.out.println("La codifica è andata a buon fine\n----------------------------------------------------------");
+            System.out.println("messaggio criptato: " + encoded_mex);
+            System.out.println("chiave di cifratura: " + enc.getKey());
         } else if (encodec.equals("d")) {
-
-                System.out.println("Inserisci chiave di cifratura");
-                String key = scanner2.nextLine();
                 System.out.println("Inserisci il messaggio criptato");
                 String mex = scanner2.nextLine();
-                System.out.println("Messaggio decriptato: " + dec.decode(key, mex));
+                System.out.println("Inserisci chiave di cifratura");
+                String key = scanner2.nextLine();
+                System.out.println("\n----------------------------------------------\nMessaggio decriptato: " + dec.decode(key, mex));
             }
         }
 }
