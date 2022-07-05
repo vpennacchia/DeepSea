@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class Enc {
     int i, space = 0, j;
@@ -110,11 +111,11 @@ public class Enc {
         for(i = 0; i<= encode.length - 1; ++i){
             if(i <= ek.length - 1) {
                 if(i != 0) {
-                    encode[i] = (char) ((encode[i] + (ek[i] * ek[i])));
+                    encode[i] = (char) ((encode[i] + (ek[i] + (pow((int) ek[i], 2) + encode.length + i))));
                     System.out.println("--> " + printArray(encode));
                 }
                 else{
-                    encode[i] = (char) ((encode[i] + ek[0]));
+                    encode[i] = (char) ((encode[i] + (ek[i] + (pow((int) ek[i], 2) + encode.length + i))));
                     System.out.println("--> " + printArray(encode));
                 }
             }

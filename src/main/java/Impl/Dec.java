@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public class Dec {
     String mex;
@@ -88,11 +89,11 @@ public class Dec {
         for(i = 0; i<= dec.length - 1; ++i){
             if(i <= ek.length - 1) {
                 if(i != 0) {
-                    dec[i] =  (char) ((dec[i] - (ek[i] * ek[i])));
+                    dec[i] = (char) ((dec[i] - (ek[i] + (pow((int) ek[i], 2) + dec.length + i))));
                     System.out.println("--> " + printArray(dec));
                 }
                 else{
-                    dec[i] = (char) ((dec[i] - ek[0]));
+                    dec[i] = (char) ((dec[i] - (ek[i] + (pow((int) ek[i], 2) + dec.length + i))));
                     System.out.println("--> " + printArray(dec));
                 }
             }
