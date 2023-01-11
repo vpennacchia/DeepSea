@@ -1,4 +1,4 @@
-package main.java.Impl;
+package Impl;
 
 import java.io.*;
 import java.util.ArrayList;

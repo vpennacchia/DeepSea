@@ -1,10 +1,10 @@
-package main.java.Test;
+package Test;
 
-import main.java.Impl.Dec;
-import main.java.Impl.Enc;
+import Impl.Dec;
+import Impl.Enc;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.csecurity.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class Main {

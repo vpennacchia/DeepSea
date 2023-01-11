@@ -1,11 +1,13 @@
-package main.java.Impl;
+package Impl;
 
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.time.LocalTime;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -174,8 +176,15 @@ public class Enc {
     }
 
     public String generateKey() throws NoSuchAlgorithmException {
-        SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
-        encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        if(Integer.valueOf(LocalTime.now().toString().substring(0,2)) % 2 == 0){
+            SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
+            encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        }
+        else{
+            SecretKey secretKey = KeyGenerator.getInstance("DESede").generateKey();
+            encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        }
+
         return encodedKey;
     }
 }
