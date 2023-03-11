@@ -1,6 +1,5 @@
 package Impl;
 
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
@@ -8,11 +7,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.time.LocalTime;
+import java.util.List;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class Enc {
+
     int i, space = 0, j;
     ArrayList<Integer> SpecialChar = new ArrayList<>();
     char [] encode;
@@ -37,16 +38,17 @@ public class Enc {
             }
         }
 
-        mixCharacters();
-        enc_mex = buildMex(enc_mex);
+        encode = mixCharacters(encode);
+        enc_mex = buildMex(encode);
 
         Key = generateKey();
-        encKeyMex();
-        key_mex = buildMex(key_mex);
+        encode = encKeyMex(encode, Key);
+        key_mex = buildMex(encode);
 
         enc_mex = key_mex;
-        SpecialChar = encIndexes();
-        addIndexes();
+        SpecialChar = encIndexes(SpecialChar);
+        enc_mex = addIndexes(enc_mex, SpecialChar);
+
         System.out.println("--> " + enc_mex);
         return enc_mex;
     }
@@ -79,7 +81,7 @@ public class Enc {
     }
 
     public char encodeSpaces(){
-        if (space > 3) {
+        if (space > 6) {
             space = 0;
         }
         if (space == 0) {
@@ -94,8 +96,17 @@ public class Enc {
         if (space == 3) {
             encode[i] = '#';
         }
-        ++space;
+        if (space == 4) {
+            encode[i] = '*';
+        }
+        if (space == 5) {
+            encode[i] = '£';
+        }
+        if (space == 6) {
+            encode[i] = '&';
+        }
 
+        ++space;
         return encode[i];
     }
 
@@ -108,7 +119,7 @@ public class Enc {
         return arr;
     }
 
-    public void encKeyMex(){
+    public char [] encKeyMex(char [] encode, String Key){
         char [] ek = Key.toCharArray();
         for(i = 0; i<= encode.length - 1; ++i){
             if(i <= ek.length - 1) {
@@ -126,9 +137,11 @@ public class Enc {
                 System.out.println("--> " + printArray(encode));
             }
         }
+
+        return encode;
     }
 
-    public void mixCharacters(){
+    public char [] mixCharacters(char [] encode){
         j = (encode.length) / 2;
         for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
             char s = encode[i];
@@ -144,9 +157,12 @@ public class Enc {
             encode[j] = encode[encode.length - 1];
             encode[encode.length - 1] = el1;
         }
+
+        return encode;
     }
 
-    public String buildMex(String enc_mex) {
+    public String buildMex(char [] encode) {
+        String enc_mex = "";
         for (j = 0; j <= encode.length - 1; ++j) {
             enc_mex = enc_mex + encode[j];
         }
@@ -154,14 +170,15 @@ public class Enc {
         return enc_mex;
     }
 
-    public void addIndexes(){
+    public String addIndexes(String enc_mex, ArrayList<Integer> SpecialChar){
         enc_mex =  enc_mex + "_" + encode[0]  + "_" + "-";
         for(i=0; i <= SpecialChar.size() - 1; ++i){
             enc_mex = enc_mex + SpecialChar.get(i) + "-";
         }
+        return enc_mex;
     }
 
-    public  ArrayList<Integer> encIndexes(){
+    public  ArrayList<Integer> encIndexes(ArrayList<Integer> SpecialChar){
         for(i = 0; i<= SpecialChar.size() - 1; ++i){
             if(i != 0){
                 int indx = (int) (SpecialChar.get(i) + ((i * encode.length) + pow(i,2)));
@@ -176,7 +193,7 @@ public class Enc {
     }
 
     public String generateKey() throws NoSuchAlgorithmException {
-        if(Integer.valueOf(LocalTime.now().toString().substring(0,2)) % 2 == 0){
+        if(Integer.parseInt(LocalTime.now().toString().substring(0,2)) % 2 == 0){
             SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
             encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
         }
