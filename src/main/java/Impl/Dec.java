@@ -21,23 +21,19 @@ public class Dec {
         System.out.println("--> " + printArray(dec));
         mex = "";
 
-        //aggiunge al nostro arraylist tutti gli indici presenti nel messaggio criptato
-        addSpecialChars();
-        decIndexes();
-        //prosegue con la decriptazione utilizzando la chiave di cifratura
-        decKeyMex(encodedKey);
-        //mette i caratteri nella posizione originaria
-        rollbackCharsPositions();
-        //effettua la vera e propria decodifica del messaggio
-        decodeMex();
+        addSpecialChars(); // setta la lista degli indici (special chars) e setta dec = al messaggio senza gli indici in coda
+        SpecialChar = decIndexes(SpecialChar);
+        dec = decKeyMex(encodedKey, dec);
+        dec = rollbackCharsPositions(dec);
+        dec = decodeMex(dec);
 
         //trasforma l'array in stringa
-        dec_mex = buildMex(dec_mex);
+        dec_mex = buildMex(dec);
 
         return dec_mex;
     }
 
-    public void rollbackCharsPositions(){
+    public char [] rollbackCharsPositions(char [] dec){
         j = (dec.length) / 2;
         for (i = 0; i <= ((dec.length) / 2) - 1 && j <= dec.length; ++i, ++j) {
             char s = dec[j];
@@ -53,11 +49,13 @@ public class Dec {
             dec[j] = dec[dec.length - 1];
             dec[dec.length - 1] = el1;
         }
+
+        return dec;
     }
 
-    public void decodeMex(){
+    public char [] decodeMex(char [] dec){
         for (i = 0; i <= dec.length - 1; ++i) {
-            if (dec[i] == '%' || dec[i] == '$' || dec[i] == '#' || dec[i] == '@') {
+            if (dec[i] == '%' || dec[i] == '$' || dec[i] == '#' || dec[i] == '@' || dec[i] == '*' || dec[i] == '£' || dec[i] == '&') {
                 dec[i] = ' ';
                 System.out.println("--> " + printArray(dec));
             }
@@ -82,9 +80,10 @@ public class Dec {
                 }
             }
         }
+        return dec;
     }
 
-    public void decKeyMex(String encodedKey){
+    public char [] decKeyMex(String encodedKey, char [] dec){
         ek = encodedKey.toCharArray();
         for(i = 0; i<= dec.length - 1; ++i){
             if(i <= ek.length - 1) {
@@ -102,6 +101,8 @@ public class Dec {
                 System.out.println("--> " + printArray(dec));
             }
         }
+
+        return dec;
     }
 
     public void addSpecialChars() {
@@ -136,7 +137,7 @@ public class Dec {
         return arr;
     }
 
-    public void decIndexes(){
+    public ArrayList <Integer> decIndexes(ArrayList <Integer> SpecialChar){
         for(i = 0; i <= SpecialChar.size() - 1; ++i){
             for(i = 0; i<= SpecialChar.size() - 1; ++i){
                 if(i != 0){
@@ -149,9 +150,11 @@ public class Dec {
                 }
             }
         }
+
+        return SpecialChar;
     }
 
-    public String buildMex(String dec_mex){
+    public String buildMex(char [] dec){
         for (j = 0; j <= dec.length - 1; ++j) {
             dec_mex = dec_mex + dec[j];
         }
