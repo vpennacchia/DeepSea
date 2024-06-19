@@ -3,16 +3,13 @@ package Impl;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.security.SecureRandom;
+import java.util.*;
 import java.time.LocalTime;
-import java.util.List;
 
 import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 
-public class Enc {
+public class Encode {
 
     int i, space = 0, j;
     ArrayList<Integer> SpecialChar = new ArrayList<>();
@@ -21,6 +18,7 @@ public class Enc {
     String encodedKey = "";
     String key_mex = "";
     String Key = "";
+    int hm = Integer.parseInt(LocalTime.now().toString().substring(0,2)) + Integer.parseInt(LocalTime.now().toString().substring(3,5));
 
     //metodo di codifica
     public String encode(String mex) throws NoSuchAlgorithmException {
@@ -46,38 +44,27 @@ public class Enc {
         key_mex = buildMex(encode);
 
         enc_mex = key_mex;
-        SpecialChar = encIndexes(SpecialChar);
-        enc_mex = addIndexes(enc_mex, SpecialChar);
+        enc_mex = addHm(enc_mex);
 
         System.out.println("--> " + enc_mex);
-        return enc_mex;
+        return generateMatrix(enc_mex);
     }
 
 
     public char encodeCharacter(char character) {
-        int utf = (char) (((int) character + ((i * 3) + 5) + encode.length + i));
-        int utf2 = (char) (((int) character + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
+        int utf = (char) (((int) character + i  + encode.length + hm));
+        int utf2 = (char) (((int) character + i  + hm + (encode.length / 2)));
 
         if (i % 2 == 0) {
-            if (utf == 0 || (utf >= 127 && utf <= 159) || utf > 1824) {
-                character = (char) ((int) (character) + 1);
-                SpecialChar.add(i);
-            } else {
-                character = (char) (((int) character + ((i * 3) + 5) + encode.length + i));
-            }
+            character = (char) utf;
         } else {
-            if (utf2 == 0 || (utf2 >= 127 && utf2 <= 159) || utf2 > 1824) {
-                character = (char) ((int) (character) + 1);
-                SpecialChar.add(i);
-            } else {
-                character = (char) (((int) character + ((i * 6) + 13) + encode.length + (i + 4) * (encode.length / 2)));
-            }
+            character = (char) utf2;
         }
         return character;
     }
 
     public String getKey(){
-        return encodedKey;
+        return encodedKey + "|" + enc_mex.length();
     }
 
     public char encodeSpaces(){
@@ -141,6 +128,11 @@ public class Enc {
         return encode;
     }
 
+    public String addHm(String mex) {
+        mex = mex + "_V_" + hm;
+        return mex;
+    }
+
     public char [] mixCharacters(char [] encode){
         j = (encode.length) / 2;
         for (i = 0; i <= ((encode.length) / 2) - 1 && j <= encode.length; ++i, ++j) {
@@ -170,28 +162,6 @@ public class Enc {
         return enc_mex;
     }
 
-    public String addIndexes(String enc_mex, ArrayList<Integer> SpecialChar){
-        enc_mex =  enc_mex + "_" + encode[0]  + "_" + "-";
-        for(i=0; i <= SpecialChar.size() - 1; ++i){
-            enc_mex = enc_mex + SpecialChar.get(i) + "-";
-        }
-        return enc_mex;
-    }
-
-    public  ArrayList<Integer> encIndexes(ArrayList<Integer> SpecialChar){
-        for(i = 0; i<= SpecialChar.size() - 1; ++i){
-            if(i != 0){
-                int indx = (int) (SpecialChar.get(i) + ((i * encode.length) + pow(i,2)));
-                SpecialChar.set(i, indx);
-            }
-            else {
-                int indx = (int) (SpecialChar.get(i) + ((1 * encode.length) + pow(i,2)));
-                SpecialChar.set(i, indx);;
-            }
-        }
-        return SpecialChar;
-    }
-
     public String generateKey() throws NoSuchAlgorithmException {
         if(Integer.parseInt(LocalTime.now().toString().substring(0,2)) % 2 == 0){
             SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
@@ -203,5 +173,38 @@ public class Enc {
         }
 
         return encodedKey;
+    }
+
+    public String generateRandomString(int len){
+
+        String AB = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔØÙÚÛÜÝÞßàáâãæçèéêëìíîïðñòóôõƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɍɎɏɐɑɒɓɔɕɖɗɘəɚɛɜɝɞɟɠɡɢɣɤɥɦɧɨɩɪɫɬɭɮɯɰɱɲɳɴɵɶɷɸɹɺ";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder(len);
+        for(int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
+
+    }
+
+    public String generateMatrix(String mex){
+        List <String>  s = new ArrayList<>();
+        String newMex = "";
+        int len = mex.length();
+
+        for(i = 0; i<= mex.length() -1; ++i){
+            String random = generateRandomString(len);
+            s.add(random);
+        }
+
+        char [] t = mex.toCharArray();
+        for(i = 0; i< s.size(); ++i){
+            String tmp = s.get(i);
+            StringBuilder myStr = new StringBuilder(tmp);
+            myStr.setCharAt(i, t[i]);
+            tmp = String.valueOf(myStr);
+            newMex = newMex + tmp;
+        }
+
+        return newMex;
     }
 }
